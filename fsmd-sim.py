@@ -242,7 +242,7 @@ state = initial_state
 print('\n---Start simulation---')
 
 for i in range(iterations):
-    print("current state")
+    print("current state") # TODO continue here with print statements
     for arrow in fsmd[state]:
         condition = arrow['condition']
         instruction = arrow['instruction']
