@@ -56,7 +56,7 @@ if(fsmd_des['fsmddescription']['inputlist'] is None):
 else:
     if type(fsmd_des['fsmddescription']['inputlist']['input']) is str:
         # One element
-        inputs[fsmd_des['fsmddescription']['inputlist']['input']] = 0
+        inputs[fsmd_des['fsmddescription']['inputlist']['input']] = 0 # inputs['in_A'] = 0
     else:
         # More elements
         for input_i in fsmd_des['fsmddescription']['inputlist']['input']:
@@ -238,11 +238,10 @@ state = initial_state
 
 print('\n---Start simulation---')
 
-######################################
-######################################
-# Write your code here!
-######################################
-######################################
+# start state
+# do stuff to the datapath
+# calculate and update your new state
+# return
 
 print('\n---End of simulation---')
 
