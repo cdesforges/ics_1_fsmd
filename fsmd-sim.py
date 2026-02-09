@@ -236,7 +236,23 @@ def merge_dicts(*dict_args):
 cycle = 0
 state = initial_state
 
+# notes ###############################
+# variables: iterations, initial_state, inputs, variables, operations, conditions, fsmd
+
 print('\n---Start simulation---')
+
+for i in range(iterations):
+    print("current state")
+    for arrow in fsmd[state]:
+        condition = arrow['condition']
+        instruction = arrow['instruction']
+        nextstate = arrow['nextstate']
+
+        if evaluate_condition(condition):
+            execute_instruction(instruction)
+            state = nextstate
+            break
+
 
 # start state
 # do stuff to the datapath
