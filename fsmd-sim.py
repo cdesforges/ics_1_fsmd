@@ -251,7 +251,7 @@ def print_cycle():
     print_vars()
     print("--------------------------------------------------")
 
-def init():
+def update_inputs():
     try:
         if (not (fsmd_stim['fsmdstimulus']['setinput'] is None)):
             for setinput in fsmd_stim['fsmdstimulus']['setinput']:
@@ -295,7 +295,7 @@ print('\n---Start simulation---')
 print_intro()
 
 for cycle in range(iterations):
-    init()
+    update_inputs()
 
     if check_finished():
         print_cycle()
@@ -315,13 +315,6 @@ for cycle in range(iterations):
             break
 
 print("End of simulation. Goodbye!")
-
-
-# start state
-# do stuff to the datapath
-# calculate and update your new state
-# return
-
 print('\n---End of simulation---')
 
 #
