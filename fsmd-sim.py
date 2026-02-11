@@ -230,6 +230,57 @@ def merge_dicts(*dict_args):
         result.update(dictionary)
     return result
 
+def print_vars():
+    print("Variables:")
+    for key, val in variables.items():
+        print(f"  {key} = {val}")
+
+def print_inputs():
+    print("Inputs:")
+    for key, val in inputs.items():
+        print(f"  {key} = {val}")
+
+def print_cycle():
+    print(f"Cycle: {cycle}")
+    print(f"Current state: {state}")
+    print_inputs()
+    print(f"The condition ({condition}) is {evaluate_condition(condition)}")
+    print(f"Executing instruction: {instruction}")
+    print(f"Next state: {nextstate}")
+    print(f"At the end of cycle {cycle} execution, the status is:")
+    print_vars()
+    print("--------------------------------------------------")
+
+def init():
+    try:
+        if (not (fsmd_stim['fsmdstimulus']['setinput'] is None)):
+            for setinput in fsmd_stim['fsmdstimulus']['setinput']:
+                if type(setinput) is str:
+                    # Only one element
+                    if int(fsmd_stim['fsmdstimulus']['setinput']['cycle']) == cycle:
+                        execute_setinput(fsmd_stim['fsmdstimulus']['setinput']['expression'])
+                    break
+                else:
+                    # More than 1 element
+                    if int(setinput['cycle']) == cycle:
+                        execute_setinput(setinput['expression'])
+    except:
+        pass
+
+def check_finished():
+    try:
+        if (not (fsmd_stim['fsmdstimulus']['endstate'] is None)):
+            if state == fsmd_stim['fsmdstimulus']['endstate']:
+                return True
+    except:
+        pass
+
+def print_intro():
+    print(f"At the beginning of the simulation the status is:")
+    print_vars()
+    print(f"Initial state: {initial_state}")
+    print("--------------------------------------------------")
+
 
 #######################################
 # Start to simulate
@@ -241,17 +292,29 @@ state = initial_state
 
 print('\n---Start simulation---')
 
-for i in range(iterations):
-    print("current state") # TODO continue here with print statements
+print_intro()
+
+for cycle in range(iterations):
+    init()
+
+    if check_finished():
+        print_cycle()
+        print('End-state reached.')
+        break
+
     for arrow in fsmd[state]:
         condition = arrow['condition']
         instruction = arrow['instruction']
         nextstate = arrow['nextstate']
 
+
         if evaluate_condition(condition):
+            print_cycle()
             execute_instruction(instruction)
             state = nextstate
             break
+
+print("End of simulation. Goodbye!")
 
 
 # start state
