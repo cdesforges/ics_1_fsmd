@@ -187,6 +187,7 @@ def execute_operation(operation):
     return
 
 
+
 #
 # Description:
 # This function executes a list of operations passed as string and spaced by
@@ -307,10 +308,9 @@ for cycle in range(iterations):
         instruction = arrow['instruction']
         nextstate = arrow['nextstate']
 
-
         if evaluate_condition(condition):
-            print_cycle()
             execute_instruction(instruction)
+            print_cycle()
             state = nextstate
             break
 
