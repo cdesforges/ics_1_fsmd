@@ -1,57 +1,61 @@
 <fsmddescription>
 
   <statelist>
-    <state>INITIALIZE</state>
-    <state>TEST</state>
-    <state>ADIVC</state>
-    <state>BDIVC</state>
-    <state>FINISH</state>
+    <state>INIT</state>
+    <state>STANDBY</state>
+    <state>COOK</state>
+    <state>DELAY</state>
+    <state>KEEPWARM</state>
+    <state>OFF</state>
   </statelist>
 
-  <initialstate>INITIALIZE</initialstate>
+  <initialstate>INIT</initialstate>
 
   <inputlist>
-    <input>in_A</input>
-    <input>in_B</input>
-    <input>in_C</input>
+    <input>start_button</input>
+    <input>temp</input>
+    <input>1_hr_delay_button</input>
+    <input>2_hr_delay_button</input>
+    <input>keep_warm_button</input>
+    <input>on_off_button</input>
   </inputlist>
 
   <variablelist>
-    <variable>var_A</variable>
-    <variable>var_B</variable>
-    <variable>var_C</variable>
+    <variable>hearting_elem</variable>
+    <variable>delay_time</variable>
+    <variable>keep_warm</variable>
   </variablelist>
 
   <operationlist>
     <operation>
-      <name>init_A</name>
-      <expression>var_A = in_A</expression>
+      <name>heating_elem_on</name>
+      <expression>heating_elem = 1</expression>
     </operation>
     <operation>
-      <name>init_B</name>
-      <expression>var_B = in_B</expression>
+      <name>heating_elem_off</name>
+      <expression>heating_elem = 0</expression>
     </operation>
     <operation>
-      <name>init_C</name>
-      <expression>var_C = in_C</expression>
+      <name>set_delay_time_1_hr</name>
+      <expression>delay_time = 60</expression>
     </operation>
     <operation>
-      <name>A_div_C</name>
-      <expression>var_A = var_A // var_C</expression>
+      <name>set_delay_time_2_hr</name>
+      <expression>delay_time = 120</expression>
     </operation>
     <operation>
-      <name>B_div_C</name>
-      <expression>var_B = var_B // var_C</expression>
+      <name>set_keep_warm</name>
+      <expression>keep_warm = keep_warm_button</expression>
     </operation>
     </operationlist>
 
   <conditionlist>
     <condition>
-      <name>A_equal_B</name>
-      <expression>var_A == var_B</expression>
+      <name>temp_fin</name>
+      <expression>temp >= 100</expression>
     </condition>
     <condition>
-      <name>A_greater_B</name>
+      <name>delay_time</name>
       <expression>var_A &gt; var_B</expression>
     </condition>
     <condition>
