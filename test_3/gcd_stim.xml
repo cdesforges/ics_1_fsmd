@@ -2,17 +2,11 @@
 
   <setinput>
     <cycle>0</cycle>
-    <expression>in_A = 1953125</expression>
-  </setinput>
-
-  <setinput>
-    <cycle>0</cycle>
-    <expression>in_B = 125</expression>
-  </setinput>
-
-  <setinput>
-    <cycle>0</cycle>
-    <expression>in_C = 5</expression>
+    <expression>start_button = 1</expression>
+    <expression>1hr_delay_button = 0</expression>
+    <expression>2hr_delay_button = 0</expression>
+    <expression>keep_warm_button = 1</expression>
+    <expression>on_off_button = 0</expression>
   </setinput>
 
   <endstate>FINISH</endstate>

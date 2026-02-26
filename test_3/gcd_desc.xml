@@ -1,29 +1,29 @@
 <fsmddescription>
 
   <statelist>
+    <state>OFF</state>
     <state>INIT</state>
     <state>STANDBY</state>
     <state>COOK</state>
     <state>DELAY</state>
-    <state>KEEPWARM</state>
-    <state>OFF</state>
+    <state>KEEP_WARM</state>
   </statelist>
 
   <initialstate>INIT</initialstate>
 
   <inputlist>
     <input>start_button</input>
-    <input>temp</input>
-    <input>1_hr_delay_button</input>
-    <input>2_hr_delay_button</input>
+    <input>onehr_delay_button</input>
+    <input>2hr_delay_button</input>
     <input>keep_warm_button</input>
     <input>on_off_button</input>
   </inputlist>
 
   <variablelist>
-    <variable>hearting_elem</variable>
+    <variable>heating_elem</variable>
     <variable>delay_time</variable>
     <variable>keep_warm</variable>
+    <input>temp</input>
   </variablelist>
 
   <operationlist>
@@ -36,16 +36,36 @@
       <expression>heating_elem = 0</expression>
     </operation>
     <operation>
-      <name>set_delay_time_1_hr</name>
+      <name>set_delay_time_onehr</name>
       <expression>delay_time = 60</expression>
     </operation>
     <operation>
-      <name>set_delay_time_2_hr</name>
+      <name>set_delay_time_2hr</name>
       <expression>delay_time = 120</expression>
     </operation>
     <operation>
-      <name>set_keep_warm</name>
+      <name>init_delay_time</name>
+      <expression>delay_time = 0</expression>
+    </operation>
+    <operation>
+      <name>init_keep_warm</name>
       <expression>keep_warm = keep_warm_button</expression>
+    </operation>
+    <operation>
+      <name>init_heating_elem</name>
+      <expression>heating_elem = 0</expression>
+    </operation>
+    <operation>
+      <name>init_temp</name>
+      <expression>temp = 20</expression>
+    </operation>
+    <operation>
+      <name>delay_decr</name>
+      <expression>delay_time = delay_time - 1</expression>
+    </operation>
+    <operation>
+      <name>temp_incr</name>
+      <expression>temp = temp + 1</expression>
     </operation>
     </operationlist>
 
@@ -55,65 +75,116 @@
       <expression>temp >= 100</expression>
     </condition>
     <condition>
-      <name>delay_time</name>
-      <expression>var_A &gt; var_B</expression>
+      <name>delay_complete</name>
+      <expression>delay_time == 0</expression>
     </condition>
     <condition>
-      <name>B_greater_A</name>
-      <expression>var_A &lt; var_B</expression>
+      <name>start_pushed</name>
+      <expression>start_button == 1</expression>
+    </condition>
+    <condition>
+      <name>on_off_pushed</name>
+      <expression>on_off_button == 1</expression>
+    </condition>
+    <condition>
+      <name>onehr_delay_pushed</name>
+      <expression>1hr_delay_button == 1</expression>
+    </condition>
+    <condition>
+      <name>2hr_delay_pushed</name>
+      <expression>2hr_delay_button == 1</expression>
+    </condition>
+    <condition>
+      <name>keep_warm_on</name>
+      <expression>keep_warm == 1</expression>
     </condition>
   </conditionlist>
 
   <fsmd>
-    <INITIALIZE>
+    <INIT>
       <transition>
         <condition>True</condition>
-        <instruction>init_A init_B init_C</instruction>
-        <nextstate>TEST</nextstate>
+        <instruction>init_heating_elem init_delay_time init_keep_warm init_temp</instruction>
+        <nextstate>STANDBY</nextstate>
       </transition>
-    </INITIALIZE>
+    </INIT>
 
-    <TEST>
+    <STANDBY>
       <transition>
-        <condition>A_equal_B</condition>
+        <condition>on_off_pushed</condition>
         <instruction>NOP</instruction>
-        <nextstate>FINISH</nextstate>
+        <nextstate>OFF</nextstate>
       </transition>
       <transition>
-        <condition>A_greater_B</condition>
-        <instruction>NOP</instruction>
-        <nextstate>ADIVC</nextstate>
+        <condition>start_pushed</condition>
+        <instruction>heating_elem_on init_keep_warm</instruction>
+        <nextstate>COOK</nextstate>
       </transition>
       <transition>
-        <condition>B_greater_A</condition>
-        <instruction>NOP</instruction>
-        <nextstate>BDIVC</nextstate>
+        <condition>onehr_delay_pushed</condition>
+        <instruction>set_delay_time_onehr init_keep_warm</instruction>
+        <nextstate>DELAY</nextstate>
       </transition>
-    </TEST>
+      <transition>
+        <condition>2hr_delay_pushed</condition>
+        <instruction>set_delay_time_2hr init_keep_warm</instruction>
+        <nextstate>DELAY</nextstate>
+      </transition>
+    </STANDBY>
 
-    <ADIVC>
+    <DELAY>
       <transition>
-        <condition>True</condition>
-        <instruction>A_div_C</instruction>
-        <nextstate>TEST</nextstate>
+        <condition>delay_complete</condition>
+        <instruction>heating_elem_on</instruction>
+        <nextstate>COOK</nextstate>
       </transition>
-    </ADIVC>
-
-    <BDIVC>
       <transition>
-        <condition>True</condition>
-        <instruction>B_div_C</instruction>
-        <nextstate>TEST</nextstate>
+        <condition>TRUE</condition>
+        <instruction>delay_decr</instruction>
+        <nextstate>DELAY</nextstate>
       </transition>
-    </BDIVC>
+    </DELAY>
 
-    <FINISH>
+    <COOK>
       <transition>
-        <condition>True</condition>
+        <condition>temp_fin</condition>
         <instruction>NOP</instruction>
-        <nextstate>FINISH</nextstate>
+        <nextstate>KEEP_WARM</nextstate>
       </transition>
-    </FINISH>
+      <transition>
+        <condition>TRUE</condition>
+        <instruction>temp_incr</instruction>
+        <nextstate>COOK</nextstate>
+      </transition>
+    </COOK>
+
+    <KEEP_WARM>
+      <transition>
+        <condition>keep_warm_on</condition>
+        <instruction>NOP</instruction>
+        <nextstate>KEEP_WARM</nextstate>
+      </transition>
+      <transition>
+        <condition>on_off_pushed</condition>
+        <instruction>NOP</instruction>
+        <nextstate>OFF</nextstate>
+      </transition>
+      <transition>
+        <condition>TRUE</condition>
+        <instruction>NOP</instruction>
+        <nextstate>INIT</nextstate>
+      </transition>
+    </KEEP_WARM>
+
+
+    <OFF>
+      <transition>
+        <condition>TRUE</condition>
+        <instruction>NOP</instruction>
+        <nextstate>OFF</nextstate>
+      </transition>
+    </OFF>
+
   </fsmd>
 
 </fsmddescription>
