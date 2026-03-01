@@ -7,6 +7,7 @@
     <state>COOK</state>
     <state>DELAY</state>
     <state>KEEP_WARM</state>
+    <state>AI_CALC</state>
   </statelist>
 
   <initialstate>INIT</initialstate>
@@ -15,6 +16,8 @@
     <input>start_button</input>
     <input>onehr_delay_button</input>
     <input>twohr_delay_button</input>
+    <input>ai_delay_button</input>
+    <input>weight</input>
     <input>keep_warm_button</input>
     <input>on_off_button</input>
   </inputlist>
@@ -23,7 +26,8 @@
     <variable>heating_elem</variable>
     <variable>delay_time</variable>
     <variable>keep_warm</variable>
-    <input>temp</input>
+    <variable>temp</variable>
+    <variable>temp_step</variable>
   </variablelist>
 
   <operationlist>
@@ -65,7 +69,15 @@
     </operation>
     <operation>
       <name>temp_incr</name>
-      <expression>temp = temp + 1</expression>
+      <expression>temp = temp + 4</expression>
+    </operation>
+    <operation>
+      <name>ai_delay_calc</name>
+      <expression>delay_time = delay_time - 20 - ((weight - 200) / 50)</expression>
+    </operation>
+    <operation>
+      <name>shift_temp</name>
+      <expression>temp = temp - ((weight - 200) / 50)</expression>
     </operation>
     </operationlist>
 
@@ -95,6 +107,10 @@
       <expression>twohr_delay_button == 1</expression>
     </condition>
     <condition>
+      <name>ai_delay_pushed</name>
+      <expression>ai_delay_button == 1</expression>
+    </condition>
+    <condition>
       <name>keep_warm_on</name>
       <expression>keep_warm == 1</expression>
     </condition>
@@ -114,6 +130,11 @@
         <condition>on_off_pushed</condition>
         <instruction>NOP</instruction>
         <nextstate>OFF</nextstate>
+      </transition>
+      <transition>
+        <condition>ai_delay_pushed</condition>
+        <instruction>init_keep_warm</instruction>
+        <nextstate>AI_CALC</nextstate>
       </transition>
       <transition>
         <condition>onehr_delay_pushed</condition>
@@ -175,6 +196,24 @@
         <nextstate>INIT</nextstate>
       </transition>
     </KEEP_WARM>
+
+    <AI_CALC>
+      <transition>
+        <condition>onehr_delay_button</condition>
+        <instruction>set_delay_time_onehr ai_delay_calc shift_temp</instruction>
+        <nextstate>DELAY</nextstate>
+      </transition>
+      <transition>
+        <condition>twohr_delay_button</condition>
+        <instruction>set_delay_time_twohr ai_delay_calc shift_temp</instruction>
+        <nextstate>DELAY</nextstate>
+      </transition>
+      <transition>
+        <condition>True</condition>
+        <instruction>heating_elem_on</instruction>
+        <nextstate>COOK</nextstate>
+      </transition>
+    </AI_CALC>
 
 
     <OFF>
