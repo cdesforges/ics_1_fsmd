@@ -3,12 +3,21 @@
   <setinput>
     <cycle>0</cycle>
     <expression>start_button = 1</expression>
-    <expression>1hr_delay_button = 0</expression>
-    <expression>2hr_delay_button = 0</expression>
+    <expression>onehr_delay_button = 1</expression>
+    <expression>twohr_delay_button = 0</expression>
     <expression>keep_warm_button = 1</expression>
     <expression>on_off_button = 0</expression>
   </setinput>
 
-  <endstate>FINISH</endstate>
+    <setinput>
+    <cycle>1</cycle>
+    <expression>start_button = 1</expression>
+    <expression>onehr_delay_button = 1</expression>
+    <expression>twohr_delay_button = 0</expression>
+    <expression>keep_warm_button = 1</expression>
+    <expression>on_off_button = 0</expression>
+  </setinput>
+
+  <endstate>OFF</endstate>
 
 </fsmdstimulus>

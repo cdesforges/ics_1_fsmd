@@ -165,12 +165,23 @@ for state in fsmd:
 # on the operands stored in the dictionary 'inputs'
 #
 def execute_setinput(operation):
-    operation_clean = operation.replace(' ', '')
-    operation_split = operation_clean.split('=')
-    target = operation_split[0]
-    expression = operation_split[1]
+    # Allow both a single string and a list of strings
+    if isinstance(operation, list):
+        for op in operation:
+            execute_setinput(op)
+        return
+
+    operation = operation.strip()
+    if not operation:
+        return
+
+    operation_split = operation.split('=', 1)
+    if len(operation_split) != 2:
+        raise ValueError(f"Invalid setinput expression: {operation!r}")
+
+    target = operation_split[0].strip()
+    expression = operation_split[1].strip()
     inputs[target] = eval(expression, {'__builtins__': None}, inputs)
-    return
 
 
 #
@@ -299,6 +310,7 @@ for cycle in range(iterations):
     update_inputs()
 
     if check_finished():
+        # print("check_finished() was true!")
         print_cycle()
         print('End-state reached.')
         break
@@ -308,11 +320,16 @@ for cycle in range(iterations):
         instruction = arrow['instruction']
         nextstate = arrow['nextstate']
 
+        # print(f"condition = {condition}\ninstruction = {instruction}\nnextstate = {nextstate}")
+
         if evaluate_condition(condition):
+            # print("Took this arrow!")
             execute_instruction(instruction)
             print_cycle()
             state = nextstate
             break
+
+        # print("--------------")
 
 print("End of simulation. Goodbye!")
 print('\n---End of simulation---')

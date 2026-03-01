@@ -14,7 +14,7 @@
   <inputlist>
     <input>start_button</input>
     <input>onehr_delay_button</input>
-    <input>2hr_delay_button</input>
+    <input>twohr_delay_button</input>
     <input>keep_warm_button</input>
     <input>on_off_button</input>
   </inputlist>
@@ -40,7 +40,7 @@
       <expression>delay_time = 60</expression>
     </operation>
     <operation>
-      <name>set_delay_time_2hr</name>
+      <name>set_delay_time_twohr</name>
       <expression>delay_time = 120</expression>
     </operation>
     <operation>
@@ -88,11 +88,11 @@
     </condition>
     <condition>
       <name>onehr_delay_pushed</name>
-      <expression>1hr_delay_button == 1</expression>
+      <expression>onehr_delay_button == 1</expression>
     </condition>
     <condition>
-      <name>2hr_delay_pushed</name>
-      <expression>2hr_delay_button == 1</expression>
+      <name>twohr_delay_pushed</name>
+      <expression>twohr_delay_button == 1</expression>
     </condition>
     <condition>
       <name>keep_warm_on</name>
@@ -116,19 +116,19 @@
         <nextstate>OFF</nextstate>
       </transition>
       <transition>
-        <condition>start_pushed</condition>
-        <instruction>heating_elem_on init_keep_warm</instruction>
-        <nextstate>COOK</nextstate>
-      </transition>
-      <transition>
         <condition>onehr_delay_pushed</condition>
         <instruction>set_delay_time_onehr init_keep_warm</instruction>
         <nextstate>DELAY</nextstate>
       </transition>
       <transition>
-        <condition>2hr_delay_pushed</condition>
-        <instruction>set_delay_time_2hr init_keep_warm</instruction>
+        <condition>twohr_delay_pushed</condition>
+        <instruction>set_delay_time_twohr init_keep_warm</instruction>
         <nextstate>DELAY</nextstate>
+      </transition>
+      <transition>
+        <condition>start_pushed</condition>
+        <instruction>heating_elem_on init_keep_warm</instruction>
+        <nextstate>COOK</nextstate>
       </transition>
     </STANDBY>
 
@@ -139,7 +139,7 @@
         <nextstate>COOK</nextstate>
       </transition>
       <transition>
-        <condition>TRUE</condition>
+        <condition>True</condition>
         <instruction>delay_decr</instruction>
         <nextstate>DELAY</nextstate>
       </transition>
@@ -152,7 +152,7 @@
         <nextstate>KEEP_WARM</nextstate>
       </transition>
       <transition>
-        <condition>TRUE</condition>
+        <condition>True</condition>
         <instruction>temp_incr</instruction>
         <nextstate>COOK</nextstate>
       </transition>
@@ -170,7 +170,7 @@
         <nextstate>OFF</nextstate>
       </transition>
       <transition>
-        <condition>TRUE</condition>
+        <condition>True</condition>
         <instruction>NOP</instruction>
         <nextstate>INIT</nextstate>
       </transition>
@@ -179,7 +179,7 @@
 
     <OFF>
       <transition>
-        <condition>TRUE</condition>
+        <condition>True</condition>
         <instruction>NOP</instruction>
         <nextstate>OFF</nextstate>
       </transition>
