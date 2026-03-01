@@ -3,8 +3,8 @@
   <setinput>
     <cycle>0</cycle>
     <expression>start_button = 1</expression>
-    <expression>onehr_delay_button = 1</expression>
-    <expression>twohr_delay_button = 0</expression>
+    <expression>onehr_delay_button = 0</expression>
+    <expression>twohr_delay_button = 1</expression>
     <expression>ai_delay_button = 1</expression>
     <expression>weight = 300</expression>
     <expression>keep_warm_button = 1</expression>

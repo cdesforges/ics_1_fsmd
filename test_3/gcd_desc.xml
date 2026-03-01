@@ -199,12 +199,12 @@
 
     <AI_CALC>
       <transition>
-        <condition>onehr_delay_button</condition>
+        <condition>onehr_delay_pushed</condition>
         <instruction>set_delay_time_onehr ai_delay_calc shift_temp</instruction>
         <nextstate>DELAY</nextstate>
       </transition>
       <transition>
-        <condition>twohr_delay_button</condition>
+        <condition>twohr_delay_pushed</condition>
         <instruction>set_delay_time_twohr ai_delay_calc shift_temp</instruction>
         <nextstate>DELAY</nextstate>
       </transition>
